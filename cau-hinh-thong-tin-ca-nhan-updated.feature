@@ -19,25 +19,19 @@ Feature: Cấu hình thông tin cá nhân, hộ kinh doanh, cá nhân kinh doanh
   Scenario: Hiển thị các trường thông tin cá nhân mặc định
     When Section được tải lên
     Then Hệ thống hiển thị 8 trường thông tin
-    And 5 trường BẮT BUỘC được đánh dấu chọn và không thể tắt:
-      | Trường            | Bắt buộc | Checkbox | Placeholder/Ghi chú                                    |
+    And 4 trường BẮT BUỘC được đánh dấu chọn và không thể tắt:
+      | Trường            | Bắt buộc | Checkbox |              Ghi chú                                    |
       | Họ và tên         | Có       | Checked & Disabled | Bắt buộc                                      |
-      | Mã số thuế        | Có       | Checked & Disabled | Bắt buộc (Nếu có) - Cho phép tra cứu từ MST  |
+      | Mã số thuế        | Có       | Checked & Disabled | Bắt buộc (Nếu có)                             |
       | Địa chỉ           | Có       | Checked & Disabled | Bắt buộc                                      |
-      | Cá nhân cư trú    | Có       | Checked & Disabled | Bắt buộc (Nếu có) - Có/Không                 |
-      | CCCD/HC           | Có       | Checked & Disabled | Nếu không có MST thì require trường này       |
-    And 3 trường TÙY CHỌN không được chọn mặc định:
+      | Cá nhân cư trú    | Có       | Checked & Disabled | Bắt buộc (Nếu có) - Có/Không                  |
+
+    And 4 trường TÙY CHỌN không được chọn mặc định:
       | Trường                | Bắt buộc | Checkbox | Ghi chú                                           |
       | Quốc tịch             | Không    | Unchecked | Nếu người nộp thuế không phải quốc tịch Việt Nam |
-      | Địa chỉ thư điện tử   | Không    | Unchecked | Không bắt buộc                                    |
+      | CCCD/HC               | Không    | Unchecked | Nếu không có MST thì require trường này          |
+      | Địa chỉ thư điện tử   | Không    | Unchecked | Không bắt buộc                                   |
       | Ghi chú               | Không    | Unchecked | Nếu mẫu có thông tin cần in lên trường này       |
-
-  @default-display @visual
-  Scenario: Hiển thị thông báo về trường bắt buộc
-    When Section được tải lên
-    Then Hiển thị box thông báo màu xám ở đầu section
-    And Text thông báo: "Lưu ý: Các trường (*) là bắt buộc và được hiển thị mặc định"
-    And 5 trường bắt buộc có dấu sao đỏ "*" ngay sau tên
 
   # ============================================================
   # PHẦN 2: TRƯỜNG BẮT BUỘC - KHÔNG THỂ TẮT
@@ -45,25 +39,11 @@ Feature: Cấu hình thông tin cá nhân, hộ kinh doanh, cá nhân kinh doanh
 
   @required-fields @validation
   Scenario: Không thể tắt các trường bắt buộc
-    Given 5 trường bắt buộc đang được checked và disabled
+    Given 4 trường bắt buộc đang được checked và disabled
     When Người dùng cố gắng click vào checkbox của bất kỳ trường bắt buộc nào
     Then Checkbox vẫn ở trạng thái checked
     And Không có thay đổi nào xảy ra
     And Trường vẫn hiển thị trong preview
-
-  @required-fields @validation
-  Scenario: Trường bắt buộc luôn hiển thị kể cả khi không có dữ liệu
-    Given Tất cả trường bắt buộc để trống
-    And Toggle "Dữ liệu mẫu" đang tắt
-    When Người dùng xem preview
-    Then 5 trường bắt buộc vẫn hiển thị label:
-      | Label hiển thị                                            |
-      | Họ và tên:                                                |
-      | Mã số thuế:                                               |
-      | Địa chỉ:                                                  |
-      | Cá nhân cư trú:                                           |
-      | Căn cước công dân (Số CCCD/HC hoặc/Số định danh cá nhân):|
-    And Value để trống
 
   # ============================================================
   # PHẦN 3: TRƯỜNG "CÁ NHÂN CƯ TRÚ" - DROPDOWN BẮT BUỘC
@@ -74,9 +54,8 @@ Feature: Cấu hình thông tin cá nhân, hộ kinh doanh, cá nhân kinh doanh
     Given Trường "Cá nhân cư trú" là trường bắt buộc
     When Section được tải lên
     Then Checkbox "Cá nhân cư trú" đã checked và disabled
-    And Dropdown "Cá nhân cư trú" hiển thị với 3 options:
+    And Dropdown "Cá nhân cư trú" hiển thị với 2 options:
       | Option value | Option text            |
-      | ""           | Bắt buộc (Nếu có)      |
       | "Có"         | Có                     |
       | "Không"      | Không                  |
 
@@ -94,14 +73,6 @@ Feature: Cấu hình thông tin cá nhân, hộ kinh doanh, cá nhân kinh doanh
     Then Dropdown hiển thị giá trị "Không"
     And Preview cập nhật hiển thị "Cá nhân cư trú: Không"
 
-  @resident-status
-  Scenario: Thay đổi giá trị cá nhân cư trú
-    Given Dropdown "Cá nhân cư trú" đang có giá trị "Có"
-    And Preview hiển thị "Cá nhân cư trú: Có"
-    When Người dùng chọn "Không" từ dropdown
-    Then Dropdown cập nhật thành "Không"
-    And Preview cập nhật thành "Cá nhân cư trú: Không"
-
   # ============================================================
   # PHẦN 4: TRƯỜNG TÙY CHỌN - CÓ THỂ BẬT/TẮT
   # ============================================================
@@ -112,7 +83,6 @@ Feature: Cấu hình thông tin cá nhân, hộ kinh doanh, cá nhân kinh doanh
     And Checkbox "Quốc tịch" không được check
     When Người dùng đánh dấu chọn checkbox "Quốc tịch"
     Then Preview hiển thị trường "Quốc tịch" với giá trị trống
-    And Input field hiển thị placeholder "Không bắt buộc - Nếu người nộp thuế không phải quốc tịch Việt Nam"
 
   @optional-fields @toggle
   Scenario: Tắt trường tùy chọn "Địa chỉ thư điện tử"
@@ -127,8 +97,7 @@ Feature: Cấu hình thông tin cá nhân, hộ kinh doanh, cá nhân kinh doanh
     Given Trường "Ghi chú" đang bị ẩn
     When Người dùng đánh dấu chọn "Ghi chú"
     Then Preview hiển thị trường "Ghi chú"
-    And Input hiển thị placeholder "Không bắt buộc - Nếu mẫu có thông tin cần in lên trường này"
-
+    
   # ============================================================
   # PHẦN 5: SẮP XẾP LẠI THỨ TỰ
   # ============================================================
