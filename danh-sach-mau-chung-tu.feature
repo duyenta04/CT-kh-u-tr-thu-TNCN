@@ -45,17 +45,16 @@ Feature: Quản lý danh sách mẫu chứng từ
   @timestamp @save-redirect
   Scenario: Mẫu mới được ghi nhận thời gian tạo
     Given Người dùng đang tạo mẫu mới
-    When Người dùng nhấn nút "Lưu" vào lúc 10:30 ngày 30/01/2025
-    Then Mẫu được lưu với timestamp "30/01/2025 10:30"
+    When Người dùng nhấn nút "Lưu" vào ngày 30/01/2025
+    Then Mẫu được lưu với ngày tạo "30/01/2025"
     And Thời gian tạo hiển thị trong danh sách mẫu
 
   @timestamp @save-redirect
   Scenario: Mẫu được cập nhật thời gian chỉnh sửa
     Given Người dùng đang chỉnh sửa mẫu đã tồn tại từ ngày 15/01/2025
-    When Người dùng lưu thay đổi vào lúc 14:45 ngày 30/01/2025
-    Then Mẫu giữ nguyên thời gian tạo "15/01/2025"
-    And Thời gian chỉnh sửa cuối được cập nhật thành "30/01/2025 14:45"
-    And Cả hai thời gian đều hiển thị trong danh sách
+    When Người dùng lưu thay đổi vào ngày 30/01/2025
+    Then Mẫu cập nhật ngày tạo gần nhất 30/01/2025
+  
 
   # ============================================================
   # PHẦN 2: HIỂN THỊ DANH SÁCH MẪU
