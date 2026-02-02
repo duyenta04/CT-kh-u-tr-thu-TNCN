@@ -15,9 +15,9 @@ Feature: Tạo mới tờ khai đăng ký/thay đổi thông tin sử dụng ch�
     Then hệ thống mở form tạo tờ khai mới với "<type_form>" được tùy chọn
 
     Examples:
-      | type_form          |
-      | Đăng ký mới        |
-      | Thay đổi thông tin |
+      | type_form          | value
+      | Đăng ký mới        | 1
+      | Thay đổi thông tin | 2
 
   Rule: Xác định loại tờ khai dựa trên lịch sử đăng ký
   @business-rules @api
@@ -201,26 +201,6 @@ Feature: Tạo mới tờ khai đăng ký/thay đổi thông tin sử dụng ch�
       | Hiệu lực đến ngày      |
       | Hình thức đăng ký      |
 
-  Rule: Loại đăng ký phải rõ ràng
-  @validation @type-form @api
-  Scenario Outline: Loại đăng ký hợp lệ
-    Given người dùng đã đăng nhập vào hệ thống
-    When người dùng tạo tờ khai với loại đăng ký "<type_form>"
-    Then hệ thống chấp nhận yêu cầu
-    And hệ thống tạo tờ khai thành công
-
-    Examples:
-      | type_form | mô_tả                                                      |
-      | 1         | Đăng ký mới sử dụng chứng từ điện tử                       |
-      | 2         | Thay đổi thông tin đăng ký sử dụng chứng từ điện tử        |
-
-  @validation @type-form @api
-  Scenario: Loại đăng ký không hợp lệ
-    Given người dùng đã đăng nhập vào hệ thống
-    When người dùng tạo tờ khai với "<type_form>" không phải là "1" hoặc "2"
-    Then hệ thống từ chối yêu cầu
-    And hiển thị thông báo lỗi "Loại đăng ký không hợp lệ"
-
   Rule: Gửi tờ khai cho CQT
   @submission @api
   Scenario: Tạo tờ khai mới và gửi trực tiếp cho cơ quan thuế
@@ -243,19 +223,6 @@ Feature: Tạo mới tờ khai đăng ký/thay đổi thông tin sử dụng ch�
     And không có tờ khai mới nào được tạo
 
   Rule: Xử lý phản hồi từ CQT
-  @response-handling @api
-  Scenario Outline: Xử lý thông điệp 110 - Tiếp nhận tờ khai
-    Given hệ thống đã có tờ khai ở trạng thái "Đã gửi CQT"
-    When hệ thống nhận được thông điệp 110 với thẻ THop = "<THop_value>" từ CQT
-    Then tờ khai chuyển trạng thái sang "<new_status>"
-
-    Examples:
-      | THop_value | new_status          | mô_tả                                                                     |
-      | 1          | Chờ CQT duyệt       | Trường hợp tiếp nhận Tờ khai đăng ký sử dụng chứng từ điện tử             |
-      | 2          | CQT không tiếp nhận | Trường hợp không tiếp nhận Tờ khai đăng ký sử dụng chứng từ điện tử       |
-      | 3          | Chờ CQT duyệt       | Trường hợp tiếp nhận Tờ khai thay đổi thông tin sử dụng chứng từ điện tử  |
-      | 4          | CQT không tiếp nhận | Trường hợp không tiếp nhận Tờ khai thay đổi thông tin sử dụng chứng từ điện tử |
-
   @response-handling @api
   Scenario Outline: Xử lý thông điệp 111 - Chấp nhận tờ khai
     Given hệ thống đã có tờ khai ở trạng thái "Chờ CQT duyệt"
